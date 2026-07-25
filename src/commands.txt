@@ -1,0 +1,15 @@
+
+sudo systemctl daemon-reload #reload service files after creating/editing one
+sudo systemctl enable --now etf-monitor #start now and auto start on every boot
+
+systemctl status etf-monitor #shows state
+sudo systemctl restart etf-monitor #stop and start in one step, use after editing the script
+sudo systemctl stop etf-monitor #stop it now, but it will restart on the next reboot
+sudo systemctl start etf-monitor #start it now, if currently stopped
+sudo systemctl disable --now etf-monitor #stop now, prevent autostart at boot
+
+journalctl -u etf-monitor -f #watch live log
+journalctl -u etf-monitor --since today #show todays log entries
+journalctl -u etf-monitor -n 50 #show the last 50 log lines
+
+rm ~/.etf_seen.json #wipe the seen filings memory
