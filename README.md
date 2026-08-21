@@ -27,19 +27,14 @@ alerts. Leave it running to continue monitoring. Stop it with `Ctrl+C`.
 
 ## Run as a systemd Service
 
-The service unit on this machine is named `etf-monitor`. It currently points
-to `/home/pi/scripts/etf_monitor.py`; after moving to this repository, update
-its `ExecStart` line to:
-
-```ini
-ExecStart=/usr/bin/python3 /home/pi/Projects/ETFScraper/src/etf_monitor.py
-```
-
-Then reload systemd and enable the service:
+Install the tracked service unit, reload systemd, enable it at boot, and start
+the updated monitor:
 
 ```bash
+sudo install -m 644 systemd/etf-monitor.service /etc/systemd/system/etf-monitor.service
 sudo systemctl daemon-reload
-sudo systemctl enable --now etf-monitor
+sudo systemctl enable etf-monitor
+sudo systemctl restart etf-monitor
 ```
 
 Useful service commands:

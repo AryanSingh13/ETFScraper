@@ -1,0 +1,15 @@
+[Unit]
+Description=SEC ETF Filing Monitor
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/Projects/ETFScraper
+ExecStart=/usr/bin/python3 /home/pi/Projects/ETFScraper/src/etf_monitor.py
+Restart=always
+RestartSec=60
+
+[Install]
+WantedBy=multi-user.target
