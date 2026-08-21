@@ -42,6 +42,9 @@ def load_seen():
     except Exception:
         return set()
 
+def save_seen(seen):
+    STATE.write_text(json.dumps(sorted(seen)))
+
 def url_for(cik, a):
     return ("https://www.sec.gov/Archives/edgar/data/"
             f"{int(cik)}/{a.replace('-','')}/{a}-index.htm")
@@ -145,6 +148,7 @@ def main():
             if first:
                 log.info("First run: seeding %d", len(new))
                 seen.update(r[0] for (l, v, r) in new)
+                save_seen(seen)
                 first = False
             else:
                 for label, validate, rec in new:
@@ -157,14 +161,17 @@ def main():
                         if validate and not has_etf_language(text):
                             log.info("skipped non-ETF candidate: %s", rec[4])
                             seen.add(rec[0])
+                            save_seen(seen)
                             continue
                         exchange = listing_exchange(text) if label == "Upcoming ETF listing" else ""
                         if label == "Upcoming ETF listing" and not exchange:
                             log.info("skipped 8-A12B without a recognized exchange: %s", rec[4])
                             seen.add(rec[0])
+                            save_seen(seen)
                             continue
                         notify(label, rec, exchange)
                         seen.add(rec[0])
+                        save_seen(seen)
                         time.sleep(0.3)
                     except Exception as e:
                         log.info("notify failed %s", e)
